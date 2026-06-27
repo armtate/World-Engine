@@ -4,9 +4,23 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 8f;
     private Rigidbody2D rb;
-    private float moveInput;
+    private PlayerControls controls;
+    private Vector2 moveInput;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        controls = new PlayerControls();
+    }
+
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+    
+    private void OnDisable()
+    {
+        controls.Disable();
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -15,12 +29,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
-        Debug.Log(moveInput);
+        moveInput = controls.Player.Move.ReadValue<Vector2>();
     }
 
     void FixedUpdate()
     {
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
     }
 }
