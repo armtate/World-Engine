@@ -3,9 +3,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float jumpForce = 12f;
+
     private Rigidbody2D rb;
     private PlayerControls controls;
     private Vector2 moveInput;
+    private bool jumpPressed;
 
     private void Awake()
     {
@@ -30,10 +33,19 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         moveInput = controls.Player.Move.ReadValue<Vector2>();
+
+        jumpPressed = controls.Player.Jump.WasPressedThisFrame();
     }
 
     void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
+
+        if (jumpPressed)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+
+            jumpPressed = false;
+        }
     }
 }
