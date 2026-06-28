@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private float coyoteTime = 0.15f;
 
     private bool isGrounded;
 
@@ -14,12 +15,18 @@ public class PlayerMovement : MonoBehaviour
     private PlayerControls controls;
     private Vector2 moveInput;
     private bool jumpPressed;
-    
+    private bool jumpReleased;
+    private float coyoteTimer;
     private void OnJump(InputAction.CallbackContext context)
     {
+        Debug.Log("Jump callback!");
+
         jumpPressed = true;
     }
-
+    private void OnJumpReleased(InputAction.CallbackContext context)
+    {
+        jumpReleased = true;
+    }
     private void Awake()
     {
         controls = new PlayerControls();
@@ -29,12 +36,15 @@ public class PlayerMovement : MonoBehaviour
     {
         controls.Enable();
         controls.Player.Jump.performed += OnJump;
+        controls.Player.Jump.canceled += OnJumpReleased;
     }
     
     private void OnDisable()
     {
         controls.Player.Jump.performed -= OnJump;
+        controls.Player.Jump.canceled -= OnJumpReleased;
         controls.Disable();
+        
     }
     void Start()
     {
@@ -52,17 +62,41 @@ public class PlayerMovement : MonoBehaviour
             groundCheckDistance,
             groundLayer
             );
+
+        if (isGrounded)
+        {
+            coyoteTimer = coyoteTime;
+        }
+        else
+        {
+            coyoteTimer -= Time.deltaTime;
+        }
     }
 
     void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
 
-        if (jumpPressed && isGrounded)
+        if (jumpPressed && coyoteTimer > 0)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(
+                rb.linearVelocity.x,
+                jumpForce
+            );
 
             jumpPressed = false;
+            jumpReleased = false;
+            coyoteTimer = 0f;
+        }
+
+        if (jumpReleased && rb.linearVelocity.y > 0)
+        {
+            rb.linearVelocity = new Vector2(
+                rb.linearVelocity.x,
+                rb.linearVelocity.y * 0.5f
+            );
+
+            jumpReleased = false;
         }
     }
 
