@@ -8,20 +8,23 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 0.1f;
     [SerializeField] private float coyoteTime = 0.15f;
+    [SerializeField] private float jumpBufferTime = 0.1f;
 
     private bool isGrounded;
 
     private Rigidbody2D rb;
     private PlayerControls controls;
     private Vector2 moveInput;
-    private bool jumpPressed;
     private bool jumpReleased;
     private float coyoteTimer;
+    private float jumpBufferTimer;
+
+
     private void OnJump(InputAction.CallbackContext context)
     {
         Debug.Log("Jump callback!");
 
-        jumpPressed = true;
+        jumpBufferTimer = jumpBufferTime;
     }
     private void OnJumpReleased(InputAction.CallbackContext context)
     {
@@ -71,21 +74,22 @@ public class PlayerMovement : MonoBehaviour
         {
             coyoteTimer -= Time.deltaTime;
         }
+        jumpBufferTimer -= Time.deltaTime;
     }
 
     void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
 
-        if (jumpPressed && coyoteTimer > 0)
+        if (jumpBufferTimer > 0 && coyoteTimer > 0)
         {
             rb.linearVelocity = new Vector2(
                 rb.linearVelocity.x,
                 jumpForce
             );
 
-            jumpPressed = false;
             jumpReleased = false;
+            jumpBufferTimer = 0f;
             coyoteTimer = 0f;
         }
 
