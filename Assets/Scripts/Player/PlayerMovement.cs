@@ -60,15 +60,29 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        moveInput = controls.Player.Move.ReadValue<Vector2>();
+        ReadInput();
+        CheckGround();
+        UpdateCoyoteTimer();
+        UpdateJumpBuffer();
+    }
 
+    private void ReadInput()
+    {
+        moveInput = controls.Player.Move.ReadValue<Vector2>();
+    }
+
+    private void CheckGround()
+    {
         isGrounded = Physics2D.Raycast(
             groundCheck.position,
             Vector2.down,
             groundCheckDistance,
             groundLayer
-            );
+        );
+    }
 
+    private void UpdateCoyoteTimer()
+    {
         if (isGrounded)
         {
             coyoteTimer = coyoteTime;
@@ -77,9 +91,12 @@ public class PlayerMovement : MonoBehaviour
         {
             coyoteTimer -= Time.deltaTime;
         }
-        jumpBufferTimer -= Time.deltaTime;
     }
 
+    private void UpdateJumpBuffer()
+    {
+        jumpBufferTimer -= Time.deltaTime;
+    }
     void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
