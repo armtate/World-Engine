@@ -2,34 +2,43 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
+    //MOVEMENT SETTINGS
+
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float jumpForce = 12f;
+
+    //GROUND DETECTION
+
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 0.1f;
-    [SerializeField] private float coyoteTime = 0.15f;
-    [SerializeField] private float jumpBufferTime = 0.1f;
+
+    //JUMP ASSISTANCE
+
+    [SerializeField] private float coyoteTime = 0.1f;
+    [SerializeField] private float jumpBufferTime = 0.05f;
+
+    //STATE
 
     private bool isGrounded;
-
-    private Rigidbody2D rb;
-    private PlayerControls controls;
-    private Vector2 moveInput;
     private bool jumpReleased;
+
+    //TIMERS
+
     private float coyoteTimer;
     private float jumpBufferTimer;
 
+    //REFRENCES
 
-    private void OnJump(InputAction.CallbackContext context)
-    {
-        Debug.Log("Jump callback!");
+    private Rigidbody2D rb;
+    private PlayerControls controls;
 
-        jumpBufferTimer = jumpBufferTime;
-    }
-    private void OnJumpReleased(InputAction.CallbackContext context)
-    {
-        jumpReleased = true;
-    }
+    //INPUT
+
+    private Vector2 moveInput;
+
+    //INITIALIZATION
+
     private void Awake()
     {
         controls = new PlayerControls();
@@ -41,20 +50,14 @@ public class PlayerMovement : MonoBehaviour
         controls.Player.Jump.performed += OnJump;
         controls.Player.Jump.canceled += OnJumpReleased;
     }
-    
-    private void OnDisable()
-    {
-        controls.Player.Jump.performed -= OnJump;
-        controls.Player.Jump.canceled -= OnJumpReleased;
-        controls.Disable();
-        
-    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
+    //UNITY LOOP
+
     void Update()
     {
         moveInput = controls.Player.Move.ReadValue<Vector2>();
@@ -103,6 +106,31 @@ public class PlayerMovement : MonoBehaviour
             jumpReleased = false;
         }
     }
+
+    //CLEANUP
+
+    private void OnDisable()
+    {
+        controls.Player.Jump.performed -= OnJump;
+        controls.Player.Jump.canceled -= OnJumpReleased;
+        controls.Disable();
+
+    }
+
+    //INPUT CALLBACKS
+
+    private void OnJump(InputAction.CallbackContext context)
+    {
+        Debug.Log("Jump callback!");
+
+        jumpBufferTimer = jumpBufferTime;
+    }
+    private void OnJumpReleased(InputAction.CallbackContext context)
+    {
+        jumpReleased = true;
+    }
+    
+    //DEBUG
 
     private void OnDrawGizmosSelected()
     {
