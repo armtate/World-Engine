@@ -6,6 +6,11 @@ public class Coin : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            PlayerScore playerScore =
+                other.GetComponent<PlayerScore>();
+
+            playerScore.AddCoin();
+
             Destroy(gameObject);
         }
     }
