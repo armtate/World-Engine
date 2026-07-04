@@ -1,19 +1,21 @@
+using TMPro;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class PlayerScore : MonoBehaviour
 {
-    private int coinsCollected = 0;
-    private int score = 0;
+    [SerializeField] private int coinsCollected = 0;
+    [SerializeField] private int score = 0;
+
+    [SerializeField] private UIManager uiManager;
 
     public void AddCoin()
     {
         coinsCollected++;
-
         score += 100;
 
-        Debug.Log(
-            "Coins: " + coinsCollected + 
-            " | Score: " + score
-            );
+        uiManager.UpdateScore(score);
     }
+
+    ScenesUsingAsset TMPro;
 }
