@@ -43,6 +43,7 @@ public class EnemySpawner : MonoBehaviour
             Debug.LogWarning("No spawn points assigned!");
             return;
         }
+        Enemy[] enemies = FindObjectsByType<Enemy>();
 
         int randomIndex = Random.Range(0, spawnPoints.Length);
         Instantiate(enemyPrefab, spawnPoints[randomIndex].position, Quaternion.identity);
