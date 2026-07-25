@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7480368927915054067}
   - component: {fileID: 3502674989353888838}
   - component: {fileID: 6025445179379916668}
+  - component: {fileID: 7696758570957850910}
+  - component: {fileID: -6241188839797184109}
   m_Layer: 0
   m_Name: PF_Enemy
   m_TagString: Untagged
@@ -106,8 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a33e082776a893b4a8229ffac66082ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  moveSpeed: 3
-  detectionRadius: 1000
 --- !u!61 &3502674989353888838
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -181,3 +181,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &7696758570957850910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6466854521734839814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4c826df7b96984cb4efd12992df172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  moveSpeed: 3
+--- !u!114 &-6241188839797184109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6466854521734839814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5663d065741314da561f76d7cc98ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  patrolDistance: 3
+  patrolWaitTime: 1.5
+  detectionRadius: 1
