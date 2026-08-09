@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -18,7 +17,9 @@ public class Weapon : MonoBehaviour
 
     private int currentAmmo;
     private float nextFireTime;
+
     private bool isReloading;
+    private float reloadEndTime;
 
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => reserveAmmo;
@@ -30,8 +31,20 @@ public class Weapon : MonoBehaviour
         currentAmmo = magazineSize;
     }
 
+    private void Update()
+    {
+        CheckReload();
+    }
+
+    private void OnEnable()
+    {
+        CheckReload();
+    }
+
     public void Fire(Vector2 direction)
     {
+        CheckReload();
+
         if (isReloading)
             return;
 
@@ -83,15 +96,23 @@ public class Weapon : MonoBehaviour
         if (reserveAmmo <= 0)
             return;
 
-        StartCoroutine(Reload());
+        isReloading = true;
+        reloadEndTime = Time.time + reloadTime;
     }
 
-    private IEnumerator Reload()
+    private void CheckReload()
     {
-        isReloading = true;
+        if (!isReloading)
+            return;
 
-        yield return new WaitForSeconds(reloadTime);
+        if (Time.time < reloadEndTime)
+            return;
 
+        FinishReload();
+    }
+
+    private void FinishReload()
+    {
         int ammoNeeded = magazineSize - currentAmmo;
         int ammoToLoad = Mathf.Min(ammoNeeded, reserveAmmo);
 

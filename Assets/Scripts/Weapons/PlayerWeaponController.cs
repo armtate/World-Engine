@@ -3,17 +3,34 @@ using UnityEngine.InputSystem;
 
 public class PlayerWeaponController : MonoBehaviour
 {
-    [SerializeField] private Weapon currentWeapon;
+    [Header("Weapon Setup")]
+    [SerializeField] private Transform weaponHolder;
+    [SerializeField] private Weapon startingWeapon;
+
+    private Weapon[] weaponSlots = new Weapon[2];
+    private int activeSlot = 0;
 
     private Camera mainCamera;
+
+    public Weapon CurrentWeapon => weaponSlots[activeSlot];
 
     private void Awake()
     {
         mainCamera = Camera.main;
+
+        if (startingWeapon != null)
+        {
+            weaponSlots[0] = startingWeapon;
+            EquipSlot(0);
+        }
     }
 
     private void Update()
     {
+        HandleWeaponSwitching();
+
+        Weapon currentWeapon = CurrentWeapon;
+
         if (currentWeapon == null)
             return;
 
@@ -39,5 +56,99 @@ public class PlayerWeaponController : MonoBehaviour
         {
             currentWeapon.StartReload();
         }
+    }
+
+    private void HandleWeaponSwitching()
+    {
+        if (Keyboard.current == null)
+            return;
+
+        if (Keyboard.current.digit1Key.wasPressedThisFrame)
+        {
+            EquipSlot(0);
+        }
+
+        if (Keyboard.current.digit2Key.wasPressedThisFrame)
+        {
+            EquipSlot(1);
+        }
+    }
+
+    private void EquipSlot(int slot)
+    {
+        if (slot < 0 || slot >= weaponSlots.Length)
+            return;
+
+        if (weaponSlots[slot] == null)
+            return;
+
+        activeSlot = slot;
+
+        for (int i = 0; i < weaponSlots.Length; i++)
+        {
+            if (weaponSlots[i] != null)
+            {
+                weaponSlots[i].gameObject.SetActive(i == activeSlot);
+            }
+        }
+    }
+
+    public void PickUpWeapon(Weapon weaponPrefab)
+    {
+        if (weaponPrefab == null)
+            return;
+
+        int emptySlot = FindEmptySlot();
+
+        if (emptySlot != -1)
+        {
+            Weapon newWeapon = CreateWeapon(weaponPrefab);
+
+            weaponSlots[emptySlot] = newWeapon;
+
+            EquipSlot(emptySlot);
+        }
+        else
+        {
+            ReplaceCurrentWeapon(weaponPrefab);
+        }
+    }
+
+    private int FindEmptySlot()
+    {
+        for (int i = 0; i < weaponSlots.Length; i++)
+        {
+            if (weaponSlots[i] == null)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private Weapon CreateWeapon(Weapon weaponPrefab)
+    {
+        Weapon newWeapon = Instantiate(
+            weaponPrefab,
+            weaponHolder
+        );
+
+        newWeapon.transform.localPosition = Vector3.zero;
+        newWeapon.transform.localRotation = Quaternion.identity;
+
+        return newWeapon;
+    }
+
+    private void ReplaceCurrentWeapon(Weapon weaponPrefab)
+    {
+        if (weaponSlots[activeSlot] != null)
+        {
+            Destroy(weaponSlots[activeSlot].gameObject);
+        }
+
+        weaponSlots[activeSlot] = CreateWeapon(weaponPrefab);
+
+        EquipSlot(activeSlot);
     }
 }
