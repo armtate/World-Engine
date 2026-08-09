@@ -10,17 +10,32 @@ public class Weapon : MonoBehaviour
     [Header("Projectile")]
     [SerializeField] protected GameObject projectilePrefab;
 
-    private float nextFireTime;
+    private float fireTimer;
+
+    private void Update()
+    {
+        if (fireTimer > 0f)
+        {
+            fireTimer -= Time.deltaTime;
+        }
+    }
 
     public void Fire(Vector2 direction)
     {
-        if (Time.time < nextFireTime)
-            return;
+        Debug.Log("Fire() called");
 
         if (projectilePrefab == null)
+        {
+            Debug.LogError("Weapon has NO projectile prefab!");
             return;
+        }
 
-        nextFireTime = Time.time + (1f / fireRate);
+        if (fireTimer > 0f)
+        {
+            return;
+        }
+
+        fireTimer = 1f / fireRate;
 
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -28,12 +43,22 @@ public class Weapon : MonoBehaviour
             Quaternion.identity
         );
 
+        Debug.Log("Projectile created");
+
         WeaponProjectile projectileScript =
             projectile.GetComponent<WeaponProjectile>();
 
         if (projectileScript != null)
         {
-            projectileScript.Initialize(direction, damage, projectileSpeed);
+            projectileScript.Initialize(
+                direction,
+                damage,
+                projectileSpeed
+            );
+        }
+        else
+        {
+            Debug.LogError("Projectile prefab has NO WeaponProjectile script!");
         }
     }
 }

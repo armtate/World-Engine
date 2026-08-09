@@ -17,7 +17,11 @@ public class PlayerWeaponController : MonoBehaviour
         if (currentWeapon == null)
             return;
 
-        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+        if (Mouse.current == null)
+            return;
+
+        Vector2 mouseScreenPosition =
+            Mouse.current.position.ReadValue();
 
         Vector3 mouseWorldPosition =
             mainCamera.ScreenToWorldPoint(mouseScreenPosition);
