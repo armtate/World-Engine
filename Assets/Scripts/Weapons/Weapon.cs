@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -7,27 +8,50 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float fireRate = 8f;
     [SerializeField] private float projectileSpeed = 15f;
 
+    [Header("Ammo")]
+    [SerializeField] private int magazineSize = 30;
+    [SerializeField] private int reserveAmmo = 120;
+    [SerializeField] private float reloadTime = 1.5f;
+
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
 
-    private float nextFireTime = 0f;
+    private int currentAmmo;
+    private float nextFireTime;
+    private bool isReloading;
+
+    public int CurrentAmmo => currentAmmo;
+    public int ReserveAmmo => reserveAmmo;
+    public int MagazineSize => magazineSize;
+    public bool IsReloading => isReloading;
+
+    private void Awake()
+    {
+        currentAmmo = magazineSize;
+    }
 
     public void Fire(Vector2 direction)
     {
+        if (isReloading)
+            return;
+
         if (projectilePrefab == null)
+            return;
+
+        if (currentAmmo <= 0)
         {
-            Debug.LogError("Projectile prefab missing!");
+            StartReload();
             return;
         }
 
-        Debug.Log(
-     $"Time: {Time.time:F2} | Unscaled: {Time.unscaledTime:F2} | TimeScale: {Time.timeScale} | Next: {nextFireTime:F2}"
- );
+        float timeBetweenShots = 1f / fireRate;
 
         if (Time.time < nextFireTime)
             return;
 
-        nextFireTime = Time.time + (1f / fireRate);
+        nextFireTime = Time.time + timeBetweenShots;
+
+        currentAmmo--;
 
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -46,7 +70,34 @@ public class Weapon : MonoBehaviour
                 projectileSpeed
             );
         }
+    }
 
-        Debug.Log("SHOT CREATED");
+    public void StartReload()
+    {
+        if (isReloading)
+            return;
+
+        if (currentAmmo >= magazineSize)
+            return;
+
+        if (reserveAmmo <= 0)
+            return;
+
+        StartCoroutine(Reload());
+    }
+
+    private IEnumerator Reload()
+    {
+        isReloading = true;
+
+        yield return new WaitForSeconds(reloadTime);
+
+        int ammoNeeded = magazineSize - currentAmmo;
+        int ammoToLoad = Mathf.Min(ammoNeeded, reserveAmmo);
+
+        currentAmmo += ammoToLoad;
+        reserveAmmo -= ammoToLoad;
+
+        isReloading = false;
     }
 }

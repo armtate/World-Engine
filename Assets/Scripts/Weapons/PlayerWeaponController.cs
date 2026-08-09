@@ -20,7 +20,8 @@ public class PlayerWeaponController : MonoBehaviour
         if (Mouse.current == null)
             return;
 
-        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+        Vector2 mouseScreenPosition =
+            Mouse.current.position.ReadValue();
 
         Vector3 mouseWorldPosition =
             mainCamera.ScreenToWorldPoint(mouseScreenPosition);
@@ -30,9 +31,13 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (Mouse.current.leftButton.isPressed)
         {
-            Debug.Log("Mouse held");
-
             currentWeapon.Fire(direction);
+        }
+
+        if (Keyboard.current != null &&
+            Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            currentWeapon.StartReload();
         }
     }
 }

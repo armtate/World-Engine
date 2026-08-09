@@ -15,8 +15,6 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth -= Mathf.RoundToInt(damage);
 
-        Debug.Log("Enemy took " + damage + " damage. Health: " + currentHealth);
-
         if (currentHealth <= 0)
         {
             Die();
