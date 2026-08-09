@@ -13,9 +13,25 @@ public class WeaponProjectile : MonoBehaviour
         this.speed = speed;
     }
 
+    private void Start()
+    {
+        Destroy(gameObject, 3f);
+    }
+
     private void Update()
     {
         transform.position +=
             (Vector3)(direction * speed * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
+
+        if (enemyHealth != null)
+        {
+            enemyHealth.TakeDamage(damage);
+            Destroy(gameObject);
+        }
     }
 }
