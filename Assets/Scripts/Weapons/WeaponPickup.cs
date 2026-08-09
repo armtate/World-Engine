@@ -1,22 +1,62 @@
 using UnityEngine;
 
-public class WeaponPickup : MonoBehaviour
+public class WeaponPickup : MonoBehaviour, IInteractable
 {
     [SerializeField] private Weapon weaponPrefab;
+    [SerializeField] private SpriteRenderer highlightRenderer;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    [Header("Highlight")]
+    [SerializeField] private Color highlightedColor = Color.yellow;
+
+    private Color originalColor;
+
+    public string InteractionText
     {
-        if (!other.CompareTag("Player"))
+        get
+        {
+            if (weaponPrefab == null)
+                return "Pick Up Weapon";
+
+            return "Pick Up " + weaponPrefab.WeaponName;
+        }
+    }
+
+    private void Awake()
+    {
+        if (highlightRenderer == null)
+        {
+            highlightRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        if (highlightRenderer != null)
+        {
+            originalColor = highlightRenderer.color;
+        }
+    }
+
+    public void Interact(PlayerWeaponController player)
+    {
+        if (weaponPrefab == null)
             return;
 
-        PlayerWeaponController weaponController =
-            other.GetComponent<PlayerWeaponController>();
-
-        if (weaponController == null)
-            return;
-
-        weaponController.PickUpWeapon(weaponPrefab);
+        player.PickUpWeapon(weaponPrefab);
 
         Destroy(gameObject);
+    }
+
+    public void Highlight()
+    {
+        if (highlightRenderer != null)
+        {
+            highlightRenderer.color = highlightedColor;
+        }
+    }
+
+    public void Unhighlight()
+    {
+        if (highlightRenderer != null)
+        {
+            highlightRenderer.color = originalColor;
+        }
     }
 }

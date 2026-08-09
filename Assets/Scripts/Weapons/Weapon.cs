@@ -2,15 +2,23 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [Header("Identity")]
+    [SerializeField] private string weaponName = "Weapon";
+
     [Header("Weapon Stats")]
-    [SerializeField] private float damage = 1f;
-    [SerializeField] private float fireRate = 8f;
-    [SerializeField] private float projectileSpeed = 15f;
+    [SerializeField] private float baseDamage = 1f;
+    [SerializeField] private float baseFireRate = 8f;
+    [SerializeField] private float baseProjectileSpeed = 15f;
+
+    [Header("Rarity")]
+    [SerializeField]
+    private WeaponRarity rarity =
+        WeaponRarity.Common;
 
     [Header("Ammo")]
-    [SerializeField] private int magazineSize = 30;
+    [SerializeField] private int baseMagazineSize = 30;
     [SerializeField] private int reserveAmmo = 120;
-    [SerializeField] private float reloadTime = 1.5f;
+    [SerializeField] private float baseReloadTime = 1.5f;
 
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
@@ -21,14 +29,49 @@ public class Weapon : MonoBehaviour
     private bool isReloading;
     private float reloadEndTime;
 
+    private float damageMultiplier = 1f;
+    private float fireRateMultiplier = 1f;
+    private float projectileSpeedMultiplier = 1f;
+    private float reloadTimeMultiplier = 1f;
+
+    private float magazineSizeMultiplier = 1f;
+    private int magazineFlatBonus = 0;
+
+    public string WeaponName => weaponName;
+
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => reserveAmmo;
-    public int MagazineSize => magazineSize;
+
+    public WeaponRarity Rarity => rarity;
+
     public bool IsReloading => isReloading;
+
+    public float Damage =>
+        baseDamage * damageMultiplier;
+
+    public float FireRate =>
+        baseFireRate * fireRateMultiplier;
+
+    public float ProjectileSpeed =>
+        baseProjectileSpeed *
+        projectileSpeedMultiplier;
+
+    public float ReloadTime =>
+        baseReloadTime *
+        reloadTimeMultiplier;
+
+    public int MagazineSize =>
+        Mathf.Max(
+            1,
+            Mathf.RoundToInt(
+                baseMagazineSize *
+                magazineSizeMultiplier
+            ) + magazineFlatBonus
+        );
 
     private void Awake()
     {
-        currentAmmo = magazineSize;
+        currentAmmo = MagazineSize;
     }
 
     private void Update()
@@ -57,20 +100,23 @@ public class Weapon : MonoBehaviour
             return;
         }
 
-        float timeBetweenShots = 1f / fireRate;
+        float timeBetweenShots =
+            1f / FireRate;
 
         if (Time.time < nextFireTime)
             return;
 
-        nextFireTime = Time.time + timeBetweenShots;
+        nextFireTime =
+            Time.time + timeBetweenShots;
 
         currentAmmo--;
 
-        GameObject projectile = Instantiate(
-            projectilePrefab,
-            transform.position,
-            Quaternion.identity
-        );
+        GameObject projectile =
+            Instantiate(
+                projectilePrefab,
+                transform.position,
+                Quaternion.identity
+            );
 
         WeaponProjectile projectileScript =
             projectile.GetComponent<WeaponProjectile>();
@@ -79,8 +125,8 @@ public class Weapon : MonoBehaviour
         {
             projectileScript.Initialize(
                 direction,
-                damage,
-                projectileSpeed
+                Damage,
+                ProjectileSpeed
             );
         }
     }
@@ -90,14 +136,16 @@ public class Weapon : MonoBehaviour
         if (isReloading)
             return;
 
-        if (currentAmmo >= magazineSize)
+        if (currentAmmo >= MagazineSize)
             return;
 
         if (reserveAmmo <= 0)
             return;
 
         isReloading = true;
-        reloadEndTime = Time.time + reloadTime;
+
+        reloadEndTime =
+            Time.time + ReloadTime;
     }
 
     private void CheckReload()
@@ -113,12 +161,51 @@ public class Weapon : MonoBehaviour
 
     private void FinishReload()
     {
-        int ammoNeeded = magazineSize - currentAmmo;
-        int ammoToLoad = Mathf.Min(ammoNeeded, reserveAmmo);
+        int ammoNeeded =
+            MagazineSize - currentAmmo;
+
+        int ammoToLoad =
+            Mathf.Min(ammoNeeded, reserveAmmo);
 
         currentAmmo += ammoToLoad;
         reserveAmmo -= ammoToLoad;
 
         isReloading = false;
+    }
+
+    public void ApplyAttachment(
+        WeaponAttachment attachment)
+    {
+        if (attachment == null)
+            return;
+
+        int oldMagazineSize =
+            MagazineSize;
+
+        damageMultiplier *=
+            attachment.damageMultiplier;
+
+        fireRateMultiplier *=
+            attachment.fireRateMultiplier;
+
+        projectileSpeedMultiplier *=
+            attachment.projectileSpeedMultiplier;
+
+        reloadTimeMultiplier *=
+            attachment.reloadTimeMultiplier;
+
+        magazineSizeMultiplier *=
+            attachment.magazineSizeMultiplier;
+
+        magazineFlatBonus +=
+            attachment.magazineFlatBonus;
+
+        int magazineIncrease =
+            MagazineSize - oldMagazineSize;
+
+        if (magazineIncrease > 0)
+        {
+            currentAmmo += magazineIncrease;
+        }
     }
 }
