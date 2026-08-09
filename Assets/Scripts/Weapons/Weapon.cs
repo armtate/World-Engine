@@ -3,47 +3,37 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [Header("Weapon Stats")]
-    [SerializeField] protected float damage = 1f;
-    [SerializeField] protected float fireRate = 5f;
-    [SerializeField] protected float projectileSpeed = 10f;
+    [SerializeField] private float damage = 1f;
+    [SerializeField] private float fireRate = 8f;
+    [SerializeField] private float projectileSpeed = 15f;
 
     [Header("Projectile")]
-    [SerializeField] protected GameObject projectilePrefab;
+    [SerializeField] private GameObject projectilePrefab;
 
-    private float fireTimer;
-
-    private void Update()
-    {
-        if (fireTimer > 0f)
-        {
-            fireTimer -= Time.deltaTime;
-        }
-    }
+    private float nextFireTime = 0f;
 
     public void Fire(Vector2 direction)
     {
-        Debug.Log("Fire() called");
-
         if (projectilePrefab == null)
         {
-            Debug.LogError("Weapon has NO projectile prefab!");
+            Debug.LogError("Projectile prefab missing!");
             return;
         }
 
-        if (fireTimer > 0f)
-        {
-            return;
-        }
+        Debug.Log(
+     $"Time: {Time.time:F2} | Unscaled: {Time.unscaledTime:F2} | TimeScale: {Time.timeScale} | Next: {nextFireTime:F2}"
+ );
 
-        fireTimer = 1f / fireRate;
+        if (Time.time < nextFireTime)
+            return;
+
+        nextFireTime = Time.time + (1f / fireRate);
 
         GameObject projectile = Instantiate(
             projectilePrefab,
             transform.position,
             Quaternion.identity
         );
-
-        Debug.Log("Projectile created");
 
         WeaponProjectile projectileScript =
             projectile.GetComponent<WeaponProjectile>();
@@ -56,9 +46,7 @@ public class Weapon : MonoBehaviour
                 projectileSpeed
             );
         }
-        else
-        {
-            Debug.LogError("Projectile prefab has NO WeaponProjectile script!");
-        }
+
+        Debug.Log("SHOT CREATED");
     }
 }
