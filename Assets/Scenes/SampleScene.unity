@@ -272,6 +272,51 @@ MonoBehaviour:
   target: {fileID: 1198834744}
   offset: {x: 0, y: 1, z: -10}
   smoothSpeed: 15
+--- !u!1 &112335158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 112335159}
+  - component: {fileID: 112335160}
+  m_Layer: 0
+  m_Name: CursorManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &112335159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112335158}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.44687, y: 0.9368, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 717994149}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &112335160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 112335158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39ec8685d214d4b4fad7081436fb8fc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CursorManager
+  crosshairTexture: {fileID: 2800000, guid: 860a18492c434fe40a9c1d8cb304320e, type: 3}
 --- !u!1 &119354948
 GameObject:
   m_ObjectHideFlags: 0
@@ -1351,6 +1396,7 @@ Transform:
   m_Children:
   - {fileID: 1584614500}
   - {fileID: 1015049000}
+  - {fileID: 112335159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &853831053
@@ -2014,6 +2060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponController
   weaponHolder: {fileID: 1840572116}
   startingWeapon: {fileID: 276348960}
+  playerSprite: {fileID: 1198834743}
 --- !u!114 &1198834748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2728,9 +2775,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1840572116}
     m_Modifications:
+    - target: {fileID: 1162080490571557623, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
+      propertyPath: baseProjectileSpeed
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 2444626306096949208, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
       propertyPath: m_Name
       value: Rifle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4951135734883080329, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7334202528325500148, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9017853060066670576, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
       propertyPath: m_LocalPosition.x

@@ -7,6 +7,9 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private Transform weaponHolder;
     [SerializeField] private Weapon startingWeapon;
 
+    [Header("Facing")]
+    [SerializeField] private SpriteRenderer playerSprite;
+
     private Weapon[] weaponSlots = new Weapon[2];
     private int activeSlot = 0;
 
@@ -43,6 +46,8 @@ public class PlayerWeaponController : MonoBehaviour
         Vector3 mouseWorldPosition =
             mainCamera.ScreenToWorldPoint(mouseScreenPosition);
 
+        UpdateFacing(mouseWorldPosition);
+
         Vector2 direction =
             mouseWorldPosition - currentWeapon.transform.position;
 
@@ -55,6 +60,28 @@ public class PlayerWeaponController : MonoBehaviour
             Keyboard.current.rKey.wasPressedThisFrame)
         {
             currentWeapon.StartReload();
+        }
+    }
+
+    private void UpdateFacing(Vector3 mouseWorldPosition)
+    {
+        bool facingRight =
+            mouseWorldPosition.x >= transform.position.x;
+
+        if (playerSprite != null)
+        {
+            playerSprite.flipX = !facingRight;
+        }
+
+        if (weaponHolder != null)
+        {
+            Vector3 holderScale = weaponHolder.localScale;
+
+            holderScale.x =
+                Mathf.Abs(holderScale.x) *
+                (facingRight ? 1f : -1f);
+
+            weaponHolder.localScale = holderScale;
         }
     }
 
@@ -88,7 +115,9 @@ public class PlayerWeaponController : MonoBehaviour
         {
             if (weaponSlots[i] != null)
             {
-                weaponSlots[i].gameObject.SetActive(i == activeSlot);
+                weaponSlots[i].gameObject.SetActive(
+                    i == activeSlot
+                );
             }
         }
     }
@@ -102,7 +131,8 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (emptySlot != -1)
         {
-            Weapon newWeapon = CreateWeapon(weaponPrefab);
+            Weapon newWeapon =
+                CreateWeapon(weaponPrefab);
 
             weaponSlots[emptySlot] = newWeapon;
 
@@ -144,10 +174,13 @@ public class PlayerWeaponController : MonoBehaviour
     {
         if (weaponSlots[activeSlot] != null)
         {
-            Destroy(weaponSlots[activeSlot].gameObject);
+            Destroy(
+                weaponSlots[activeSlot].gameObject
+            );
         }
 
-        weaponSlots[activeSlot] = CreateWeapon(weaponPrefab);
+        weaponSlots[activeSlot] =
+            CreateWeapon(weaponPrefab);
 
         EquipSlot(activeSlot);
     }

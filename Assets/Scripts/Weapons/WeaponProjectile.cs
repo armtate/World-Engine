@@ -15,7 +15,7 @@ public class WeaponProjectile : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, 3f);
+        Destroy(gameObject, 1f);
     }
 
     private void Update()
