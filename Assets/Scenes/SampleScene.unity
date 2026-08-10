@@ -2848,6 +2848,10 @@ PrefabInstance:
       propertyPath: detectionRadius
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3502674989353888838, guid: 4cf437eb2dd7f91469fe5eada72a9299, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5541484099115926048, guid: 4cf437eb2dd7f91469fe5eada72a9299, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.06
