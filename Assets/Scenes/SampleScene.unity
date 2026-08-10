@@ -2784,6 +2784,10 @@ PrefabInstance:
       value: Rifle
       objectReference: {fileID: 0}
     - target: {fileID: 4951135734883080329, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 011af16e51c1f604c9dd5258ab63e1f5, type: 3}
+    - target: {fileID: 4951135734883080329, guid: 21ed780296e2ccb4e9f2c0e381d2a512, type: 3}
       propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
