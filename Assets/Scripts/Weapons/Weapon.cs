@@ -22,6 +22,7 @@ public class Weapon : MonoBehaviour
 
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform firePoint;
 
     private int currentAmmo;
     private float nextFireTime;
@@ -53,24 +54,27 @@ public class Weapon : MonoBehaviour
         baseFireRate * fireRateMultiplier;
 
     public float ProjectileSpeed =>
-        baseProjectileSpeed *
-        projectileSpeedMultiplier;
+        baseProjectileSpeed * projectileSpeedMultiplier;
 
     public float ReloadTime =>
-        baseReloadTime *
-        reloadTimeMultiplier;
+        baseReloadTime * reloadTimeMultiplier;
 
     public int MagazineSize =>
         Mathf.Max(
             1,
             Mathf.RoundToInt(
-                baseMagazineSize *
-                magazineSizeMultiplier
+                baseMagazineSize * magazineSizeMultiplier
             ) + magazineFlatBonus
         );
 
     private void Awake()
     {
+        // Automatically find the FirePoint child.
+        if (firePoint == null)
+        {
+            firePoint = transform.Find("FirePoint");
+        }
+
         currentAmmo = MagazineSize;
     }
 
@@ -111,10 +115,17 @@ public class Weapon : MonoBehaviour
 
         currentAmmo--;
 
+        // Use the FirePoint if the weapon has one.
+        // Otherwise, fall back to the weapon's position.
+        Vector3 spawnPosition =
+            firePoint != null
+                ? firePoint.position
+                : transform.position;
+
         GameObject projectile =
             Instantiate(
                 projectilePrefab,
-                transform.position,
+                spawnPosition,
                 Quaternion.identity
             );
 

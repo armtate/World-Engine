@@ -46,7 +46,7 @@ public class PlayerWeaponController : MonoBehaviour
         Vector3 mouseWorldPosition =
             mainCamera.ScreenToWorldPoint(mouseScreenPosition);
 
-        UpdateFacing(mouseWorldPosition);
+        UpdateFacingAndAim(mouseWorldPosition);
 
         Vector2 direction =
             mouseWorldPosition - currentWeapon.transform.position;
@@ -63,26 +63,33 @@ public class PlayerWeaponController : MonoBehaviour
         }
     }
 
-    private void UpdateFacing(Vector3 mouseWorldPosition)
+    private void UpdateFacingAndAim(Vector3 mouseWorldPosition)
     {
-        bool facingRight =
-            mouseWorldPosition.x >= transform.position.x;
+        Vector2 aimDirection =
+            mouseWorldPosition - weaponHolder.position;
+
+        bool facingRight = aimDirection.x >= 0f;
 
         if (playerSprite != null)
         {
             playerSprite.flipX = !facingRight;
         }
 
-        if (weaponHolder != null)
-        {
-            Vector3 holderScale = weaponHolder.localScale;
+        float angle =
+            Mathf.Atan2(aimDirection.y, aimDirection.x) *
+            Mathf.Rad2Deg;
 
-            holderScale.x =
-                Mathf.Abs(holderScale.x) *
-                (facingRight ? 1f : -1f);
+        weaponHolder.rotation =
+            Quaternion.Euler(0f, 0f, angle);
 
-            weaponHolder.localScale = holderScale;
-        }
+        Vector3 holderScale = weaponHolder.localScale;
+
+        holderScale.x = Mathf.Abs(holderScale.x);
+        holderScale.y =
+            Mathf.Abs(holderScale.y) *
+            (facingRight ? 1f : -1f);
+
+        weaponHolder.localScale = holderScale;
     }
 
     private void HandleWeaponSwitching()
