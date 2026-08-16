@@ -41,6 +41,30 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 4094824059
+    locked: 0
+  - name: Environment
+    uniqueID: 3513594545
+    locked: 0
+  - name: Player
+    uniqueID: 2142187627
+    locked: 0
+  - name: Weapons
+    uniqueID: 1537542733
+    locked: 0
+  - name: Loot
+    uniqueID: 3987049829
+    locked: 0
+  - name: Effects
+    uniqueID: 2913446101
+    locked: 0
+  - name: Foreground
+    uniqueID: 3576163763
+    locked: 0
+  - name: UI
+    uniqueID: 679238415
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []

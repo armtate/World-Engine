@@ -12,8 +12,8 @@ public class Weapon : MonoBehaviour
 
     [Header("Rarity")]
     [SerializeField]
-    private WeaponRarity rarity =
-        WeaponRarity.Common;
+    private LootRarity rarity =
+    LootRarity.Common;
 
     [Header("Ammo")]
     [SerializeField] private int baseMagazineSize = 30;
@@ -43,7 +43,7 @@ public class Weapon : MonoBehaviour
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => reserveAmmo;
 
-    public WeaponRarity Rarity => rarity;
+    public LootRarity Rarity => rarity;
 
     public bool IsReloading => isReloading;
 

@@ -3,6 +3,9 @@ using UnityEngine;
 public class WeaponPickup : MonoBehaviour, IInteractable
 {
     [SerializeField] private Weapon weaponPrefab;
+
+    public Weapon WeaponPrefab => weaponPrefab;
+
     [SerializeField] private SpriteRenderer highlightRenderer;
 
     [Header("Highlight")]

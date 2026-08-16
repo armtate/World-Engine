@@ -1,4 +1,4 @@
-public enum WeaponRarity
+public enum LootRarity
 {
     Common,
     Uncommon,

@@ -29,6 +29,10 @@ PrefabInstance:
       value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: rarity
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: firePoint
       value: 
       objectReference: {fileID: 4704833536895565930}
@@ -101,8 +105,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 521267fb95e03f04ea07803ec619da5d, type: 3}
     - target: {fileID: 8072818223704200480, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8072818223704200480, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_SortingOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8072818223704200480, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1537542733
       objectReference: {fileID: 0}
     - target: {fileID: 8072818223704200480, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_WasSpriteAssigned

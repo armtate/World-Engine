@@ -9,6 +9,13 @@ public class WeaponAttachment : ScriptableObject
     [Header("Identity")]
     public string attachmentName = "Attachment";
 
+    public LootRarity rarity =
+        LootRarity.Common;
+
+    [TextArea(2, 5)]
+    public string description =
+        "Attachment description.";
+
     [Header("Weapon Multipliers")]
     public float damageMultiplier = 1f;
     public float fireRateMultiplier = 1f;

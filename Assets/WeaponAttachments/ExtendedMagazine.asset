@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: ExtendedMagazine
   m_EditorClassIdentifier: Assembly-CSharp::WeaponAttachment
   attachmentName: Extended Magazine
+  rarity: 0
+  description: Increases magazine capacity for the equipped weapon.
   damageMultiplier: 1
   fireRateMultiplier: 1
   projectileSpeedMultiplier: 1

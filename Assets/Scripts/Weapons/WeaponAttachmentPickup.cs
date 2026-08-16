@@ -1,14 +1,23 @@
 using UnityEngine;
 
-public class WeaponAttachmentPickup : MonoBehaviour, IInteractable
+public class WeaponAttachmentPickup :
+    MonoBehaviour,
+    IInteractable
 {
-    [SerializeField] private WeaponAttachment attachment;
-    [SerializeField] private SpriteRenderer highlightRenderer;
+    [SerializeField]
+    private WeaponAttachment attachment;
+
+    [SerializeField]
+    private SpriteRenderer highlightRenderer;
 
     [Header("Highlight")]
-    [SerializeField] private Color highlightedColor = Color.yellow;
+    [SerializeField]
+    private Color highlightedColor = Color.yellow;
 
     private Color originalColor;
+
+    public WeaponAttachment Attachment =>
+        attachment;
 
     public string InteractionText
     {
@@ -17,7 +26,8 @@ public class WeaponAttachmentPickup : MonoBehaviour, IInteractable
             if (attachment == null)
                 return "Pick Up Attachment";
 
-            return "Attach " + attachment.attachmentName;
+            return "Attach " +
+                   attachment.attachmentName;
         }
     }
 
@@ -25,23 +35,44 @@ public class WeaponAttachmentPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer == null)
         {
-            highlightRenderer = GetComponent<SpriteRenderer>();
+            Transform visual =
+                transform.Find("Visual");
+
+            if (visual != null)
+            {
+                highlightRenderer =
+                    visual.GetComponent<SpriteRenderer>();
+            }
+
+            if (highlightRenderer == null)
+            {
+                highlightRenderer =
+                    GetComponent<SpriteRenderer>();
+            }
         }
 
         if (highlightRenderer != null)
         {
-            originalColor = highlightRenderer.color;
+            originalColor =
+                highlightRenderer.color;
         }
     }
 
-    public void Interact(PlayerWeaponController player)
+    public void Interact(
+        PlayerWeaponController player)
     {
-        Weapon weapon = player.CurrentWeapon;
-
-        if (weapon == null || attachment == null)
+        if (attachment == null)
             return;
 
-        weapon.ApplyAttachment(attachment);
+        Weapon weapon =
+            player.CurrentWeapon;
+
+        if (weapon == null)
+            return;
+
+        weapon.ApplyAttachment(
+            attachment
+        );
 
         Destroy(gameObject);
     }
@@ -50,7 +81,8 @@ public class WeaponAttachmentPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color = highlightedColor;
+            highlightRenderer.color =
+                highlightedColor;
         }
     }
 
@@ -58,7 +90,8 @@ public class WeaponAttachmentPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color = originalColor;
+            highlightRenderer.color =
+                originalColor;
         }
     }
 }
