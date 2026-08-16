@@ -25,16 +25,30 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer == null)
         {
-            highlightRenderer = GetComponent<SpriteRenderer>();
+            Transform visual = transform.Find("Visual");
+
+            if (visual != null)
+            {
+                highlightRenderer =
+                    visual.GetComponent<SpriteRenderer>();
+            }
+
+            if (highlightRenderer == null)
+            {
+                highlightRenderer =
+                    GetComponent<SpriteRenderer>();
+            }
         }
 
         if (highlightRenderer != null)
         {
-            originalColor = highlightRenderer.color;
+            originalColor =
+                highlightRenderer.color;
         }
     }
 
-    public void Interact(PlayerWeaponController player)
+    public void Interact(
+        PlayerWeaponController player)
     {
         if (weaponPrefab == null)
             return;
@@ -48,7 +62,8 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color = highlightedColor;
+            highlightRenderer.color =
+                highlightedColor;
         }
     }
 
@@ -56,7 +71,8 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color = originalColor;
+            highlightRenderer.color =
+                originalColor;
         }
     }
 }
