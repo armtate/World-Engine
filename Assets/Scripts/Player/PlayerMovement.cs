@@ -120,6 +120,8 @@ public class PlayerMovement : MonoBehaviour
             groundCheckDistance,
             groundLayer
         );
+
+        Debug.Log("Grounded: " + isGrounded);
     }
 
     private void UpdateCoyoteTimer()
@@ -144,6 +146,8 @@ public class PlayerMovement : MonoBehaviour
     private void OnJump(
         InputAction.CallbackContext context)
     {
+        Debug.Log("Jump callback!");
+
         jumpBufferTimer = jumpBufferTime;
     }
 
