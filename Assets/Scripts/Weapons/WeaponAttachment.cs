@@ -16,6 +16,15 @@ public class WeaponAttachment : ScriptableObject
     public string description =
         "Attachment description.";
 
+    [Header("Compatibility")]
+    public AttachmentSlotType slotType;
+
+    public WeaponFamily[] allowedWeaponFamilies;
+
+    [Header("Behavior")]
+    public WeaponBehaviorModifier behaviorModifier =
+        WeaponBehaviorModifier.None;
+
     [Header("Weapon Multipliers")]
     public float damageMultiplier = 1f;
     public float fireRateMultiplier = 1f;
@@ -25,4 +34,26 @@ public class WeaponAttachment : ScriptableObject
     [Header("Magazine")]
     public float magazineSizeMultiplier = 1f;
     public int magazineFlatBonus = 0;
+
+    public bool IsCompatibleWith(
+        WeaponFamily weaponFamily)
+    {
+        if (allowedWeaponFamilies == null ||
+            allowedWeaponFamilies.Length == 0)
+        {
+            return false;
+        }
+
+        foreach (
+            WeaponFamily allowedFamily
+            in allowedWeaponFamilies)
+        {
+            if (allowedFamily == weaponFamily)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

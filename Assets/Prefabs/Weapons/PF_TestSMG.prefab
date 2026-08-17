@@ -52,6 +52,26 @@ PrefabInstance:
       propertyPath: baseProjectileSpeed
       value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: supportedSlots.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: 'supportedSlots.Array.data[1]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: 'supportedSlots.Array.data[2]'
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: 'supportedSlots.Array.data[3]'
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: 'supportedSlots.Array.data[4]'
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7410630414086484513, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

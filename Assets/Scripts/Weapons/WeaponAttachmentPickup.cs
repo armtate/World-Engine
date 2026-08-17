@@ -12,7 +12,8 @@ public class WeaponAttachmentPickup :
 
     [Header("Highlight")]
     [SerializeField]
-    private Color highlightedColor = Color.yellow;
+    private Color highlightedColor =
+        Color.yellow;
 
     private Color originalColor;
 
@@ -41,13 +42,15 @@ public class WeaponAttachmentPickup :
             if (visual != null)
             {
                 highlightRenderer =
-                    visual.GetComponent<SpriteRenderer>();
+                    visual.GetComponent<
+                        SpriteRenderer>();
             }
 
             if (highlightRenderer == null)
             {
                 highlightRenderer =
-                    GetComponent<SpriteRenderer>();
+                    GetComponent<
+                        SpriteRenderer>();
             }
         }
 
@@ -70,9 +73,21 @@ public class WeaponAttachmentPickup :
         if (weapon == null)
             return;
 
-        weapon.ApplyAttachment(
-            attachment
-        );
+        bool attachmentApplied =
+            weapon.ApplyAttachment(
+                attachment
+            );
+
+        if (!attachmentApplied)
+        {
+            Debug.Log(
+                attachment.attachmentName +
+                " is not compatible with " +
+                weapon.WeaponName
+            );
+
+            return;
+        }
 
         Destroy(gameObject);
     }

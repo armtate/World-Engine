@@ -15,6 +15,9 @@ MonoBehaviour:
   attachmentName: Extended Magazine
   rarity: 0
   description: Increases magazine capacity for the equipped weapon.
+  slotType: 0
+  allowedWeaponFamilies: 00000000010000000200000003000000
+  behaviorModifier: 0
   damageMultiplier: 1
   fireRateMultiplier: 1
   projectileSpeedMultiplier: 1
