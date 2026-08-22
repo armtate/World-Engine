@@ -14,19 +14,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1163841593160178488, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1163841593160178488, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.25
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1316121019898401573, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.1
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1316121019898401573, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.13
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: rarity
@@ -126,7 +126,7 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 521267fb95e03f04ea07803ec619da5d, type: 3}
     - target: {fileID: 8072818223704200480, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8072818223704200480, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: m_SortingOrder
