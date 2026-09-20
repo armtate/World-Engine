@@ -2,12 +2,18 @@ using UnityEngine;
 
 public class ParallaxBackground : MonoBehaviour
 {
+    [Header("Reference")]
     [SerializeField] private Transform cameraTransform;
 
+    [Header("Horizontal Parallax")]
     [Range(0f, 1f)]
-    [SerializeField] private float parallaxStrength = 0.15f;
+    [SerializeField] private float horizontalParallax = 0.15f;
 
-    [SerializeField] private bool followVertical = false;
+    [Header("Vertical Parallax")]
+    [SerializeField] private bool followVertical = true;
+
+    [Range(0f, 1f)]
+    [SerializeField] private float verticalParallax = 0.05f;
 
     private Vector3 startPosition;
     private Vector3 cameraStartPosition;
@@ -25,6 +31,12 @@ public class ParallaxBackground : MonoBehaviour
         {
             cameraStartPosition = cameraTransform.position;
         }
+        else
+        {
+            Debug.LogWarning(
+                "ParallaxBackground: No camera was assigned or found."
+            );
+        }
     }
 
     private void LateUpdate()
@@ -36,12 +48,17 @@ public class ParallaxBackground : MonoBehaviour
             cameraTransform.position - cameraStartPosition;
 
         float xMovement =
-            cameraMovement.x * parallaxStrength;
+            cameraMovement.x * horizontalParallax;
 
-        float yMovement =
-            followVertical
-                ? cameraMovement.y * parallaxStrength
-                : 0f;
+        float yMovement = 0f;
+
+        if (followVertical)
+        {
+            // Follow most of the camera's vertical movement,
+            // while retaining a small parallax effect.
+            yMovement =
+                cameraMovement.y * (1f - verticalParallax);
+        }
 
         transform.position =
             startPosition +
