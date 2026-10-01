@@ -1205,3 +1205,18 @@ NEXT:
 - Remaining attachments/weapons
 - Crates
 - Procedural loot/enemy integration
+
+## CURRENT DEBUGGING CHECKPOINT
+
+Emergency Pack implementation has been started but is NOT yet confirmed working.
+
+Basic health UI (100 / 100 text) has been created but is NOT currently updating/displaying correctly.
+
+PlayerHealth was discovered to have disappeared from the Player GameObject during testing and was re-added.
+
+NEXT SESSION:
+1. Verify Player components and references.
+2. Fix health UI.
+3. Verify PlayerItemInventory is attached.
+4. Debug Emergency Pack activation.
+5. Confirm Emergency Pack stacking.
