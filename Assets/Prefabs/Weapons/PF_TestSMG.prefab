@@ -37,6 +37,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4704833536895565930}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: baseDamage
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: weaponName
       value: TestSMG
       objectReference: {fileID: 0}
