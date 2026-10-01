@@ -1,5 +1,19 @@
 using UnityEngine;
 
+public enum ItemID
+{
+    OverchargeCell,
+    EmergencyPack,
+    RustyScrew,
+    HeatSink,
+    CrackedCapacitor,
+    BlackboxRecorder,
+    GravityNail,
+    LightInABottle,
+    DeatomizingRay,
+    ReactiveBarrier
+}
+
 [CreateAssetMenu(
     fileName = "NewItem",
     menuName = "World Engine/Item"
@@ -7,6 +21,8 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     [Header("Identity")]
+    public ItemID itemID;
+
     public string itemName = "Item";
 
     public LootRarity rarity =

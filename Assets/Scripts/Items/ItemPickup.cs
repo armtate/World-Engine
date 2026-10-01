@@ -6,7 +6,9 @@ public class ItemPickup : MonoBehaviour, IInteractable
     [SerializeField] private SpriteRenderer highlightRenderer;
 
     [Header("Highlight")]
-    [SerializeField] private Color highlightedColor = Color.yellow;
+    [SerializeField]
+    private Color highlightedColor =
+        Color.yellow;
 
     private Color originalColor;
 
@@ -19,7 +21,8 @@ public class ItemPickup : MonoBehaviour, IInteractable
             if (itemData == null)
                 return "Pick Up Item";
 
-            return "Pick Up " + itemData.itemName;
+            return "Pick Up " +
+                itemData.itemName;
         }
     }
 
@@ -27,7 +30,8 @@ public class ItemPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer == null)
         {
-            Transform visual = transform.Find("Visual");
+            Transform visual =
+                transform.Find("Visual");
 
             if (visual != null)
             {
@@ -55,10 +59,23 @@ public class ItemPickup : MonoBehaviour, IInteractable
         if (itemData == null)
             return;
 
-        Debug.Log(
-            "Picked up item: " +
-            itemData.itemName
-        );
+        if (player == null)
+            return;
+
+        PlayerItemInventory inventory =
+            player.GetComponent<PlayerItemInventory>();
+
+        if (inventory == null)
+        {
+            Debug.LogError(
+                "ItemPickup: Player is missing " +
+                "PlayerItemInventory!"
+            );
+
+            return;
+        }
+
+        inventory.AddItem(itemData);
 
         Destroy(gameObject);
     }

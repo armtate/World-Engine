@@ -47,6 +47,8 @@ public class Weapon : MonoBehaviour
     private float magazineSizeMultiplier = 1f;
     private int magazineFlatBonus;
 
+    private PlayerItemInventory itemInventory;
+
     private readonly Dictionary<
         AttachmentSlotType,
         WeaponAttachment
@@ -73,8 +75,24 @@ public class Weapon : MonoBehaviour
     public bool IsReloading =>
         isReloading;
 
-    public float Damage =>
-        baseDamage * damageMultiplier;
+    public float Damage
+    {
+        get
+        {
+            float itemDamageMultiplier = 1f;
+
+            if (itemInventory != null)
+            {
+                itemDamageMultiplier =
+                    itemInventory
+                        .GetWeaponDamageMultiplier();
+            }
+
+            return baseDamage *
+                damageMultiplier *
+                itemDamageMultiplier;
+        }
+    }
 
     public float FireRate =>
         baseFireRate * fireRateMultiplier;
@@ -104,6 +122,10 @@ public class Weapon : MonoBehaviour
                 transform.Find("FirePoint");
         }
 
+        itemInventory =
+            GetComponentInParent<
+                PlayerItemInventory>();
+
         RecalculateAttachmentStats();
 
         currentAmmo = MagazineSize;
@@ -117,6 +139,13 @@ public class Weapon : MonoBehaviour
     private void OnEnable()
     {
         CheckReload();
+
+        if (itemInventory == null)
+        {
+            itemInventory =
+                GetComponentInParent<
+                    PlayerItemInventory>();
+        }
     }
 
     public void Fire(Vector2 direction)
@@ -164,6 +193,13 @@ public class Weapon : MonoBehaviour
 
         if (projectileScript != null)
         {
+            Debug.Log(
+                weaponName +
+                " fired for " +
+                Damage +
+                " damage."
+                );
+
             projectileScript.Initialize(
                 direction,
                 Damage,
@@ -295,9 +331,8 @@ public class Weapon : MonoBehaviour
         return false;
     }
 
-    public WeaponAttachment
-        GetAttachment(
-            AttachmentSlotType slot)
+    public WeaponAttachment GetAttachment(
+        AttachmentSlotType slot)
     {
         equippedAttachments.TryGetValue(
             slot,

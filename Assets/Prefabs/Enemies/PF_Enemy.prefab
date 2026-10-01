@@ -109,6 +109,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a33e082776a893b4a8229ffac66082ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  damage: 1
+  attackRange: 1.2
+  attackRate: 1
 --- !u!61 &3502674989353888838
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -223,3 +226,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 5
+  damageNumberOffset: {x: 0, y: -2, z: 0}

@@ -121,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
             groundLayer
         );
 
-        Debug.Log("Grounded: " + isGrounded);
+        
     }
 
     private void UpdateCoyoteTimer()
