@@ -4,6 +4,7 @@ public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 100;
 
+    [SerializeField]
     private int currentHealth;
 
     public int CurrentHealth => currentHealth;
@@ -31,12 +32,12 @@ public class PlayerHealth : MonoBehaviour
             return;
 
         currentHealth -= damage;
-
-        currentHealth =
-            Mathf.Max(currentHealth, 0);
+        currentHealth = Mathf.Max(currentHealth, 0);
 
         Debug.Log(
-            "Player HP: " +
+            "PLAYER TAKING DAMAGE: " +
+            gameObject.name +
+            " | HP: " +
             currentHealth +
             "/" +
             maxHealth
@@ -55,6 +56,13 @@ public class PlayerHealth : MonoBehaviour
         {
             inventory.OnPlayerDamaged(this);
         }
+        else
+        {
+            Debug.LogWarning(
+                "PlayerHealth could not find PlayerItemInventory on " +
+                gameObject.name
+            );
+        }
     }
 
     public void Heal(int amount)
@@ -66,15 +74,13 @@ public class PlayerHealth : MonoBehaviour
             return;
 
         currentHealth += amount;
-
         currentHealth =
-            Mathf.Min(
-                currentHealth,
-                maxHealth
-            );
+            Mathf.Min(currentHealth, maxHealth);
 
         Debug.Log(
-            "Player healed! HP: " +
+            "PLAYER HEALED: " +
+            gameObject.name +
+            " | HP: " +
             currentHealth +
             "/" +
             maxHealth
@@ -84,7 +90,6 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         Debug.Log("PLAYER DEAD");
-
         Time.timeScale = 0f;
     }
 }

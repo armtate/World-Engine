@@ -3,37 +3,44 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [Header("Attack")]
-    public int damage = 1;
+    public int damage = 5;
     public float attackRange = 1.2f;
     public float attackRate = 1f;
 
     private float nextAttackTime;
-    private PlayerStats playerStats;
+    private PlayerHealth playerHealth;
 
     private void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player =
+            GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
         {
-            playerStats = player.GetComponent<PlayerStats>();
+            playerHealth =
+                player.GetComponent<PlayerHealth>();
         }
     }
 
     private void Update()
     {
-        if (playerStats == null)
+        if (playerHealth == null)
             return;
 
         float distance = Vector2.Distance(
             transform.position,
-            playerStats.transform.position
+            playerHealth.transform.position
         );
 
-        if (distance <= attackRange && Time.time >= nextAttackTime)
+        if (
+            distance <= attackRange &&
+            Time.time >= nextAttackTime
+        )
         {
-            playerStats.TakeDamage(damage);
-            nextAttackTime = Time.time + attackRate;
+            playerHealth.TakeDamage(damage);
+
+            nextAttackTime =
+                Time.time + attackRate;
         }
     }
 }

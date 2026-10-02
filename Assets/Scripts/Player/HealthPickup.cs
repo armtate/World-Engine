@@ -2,18 +2,22 @@ using UnityEngine;
 
 public class HealthPickup : MonoBehaviour
 {
+    [SerializeField]
+    private int healAmount = 25;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
-        {
-            PlayerStats stats = other.GetComponent<PlayerStats>();
+        if (!other.CompareTag("Player"))
+            return;
 
-            if (stats != null)
-            {
-                stats.Heal(1);
-            }
+        PlayerHealth playerHealth =
+            other.GetComponent<PlayerHealth>();
 
-            Destroy(gameObject);
-        }
+        if (playerHealth == null)
+            return;
+
+        playerHealth.Heal(healAmount);
+
+        Destroy(gameObject);
     }
 }
