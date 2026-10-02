@@ -1867,7 +1867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d418dc844d68441bdf9ce43884f5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
-  itemData: {fileID: 11400000, guid: 3b1b5c979767f4d468b59440b4ce7650, type: 2}
+  itemData: {fileID: 11400000, guid: f8d664b54824e3f459b36e14f79bfbf8, type: 2}
   highlightRenderer: {fileID: 0}
   highlightedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &621627151
@@ -2105,6 +2105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e318da0ccb2a3574ca45309c9adce5e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthPickup
+  healAmount: 25
 --- !u!58 &714328061
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3311,6 +3312,7 @@ GameObject:
   - component: {fileID: 1198834749}
   - component: {fileID: 1198834750}
   - component: {fileID: 1198834751}
+  - component: {fileID: 1198834752}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3433,8 +3435,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c47e3c58817b34d9aeb01c905fe7d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScore
-  maxHealth: 100
-  health: 100
   coinsCollected: 0
   score: 0
   uiManager: {fileID: 590545535}
@@ -3508,6 +3508,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 100
+  currentHealth: 0
+--- !u!114 &1198834752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198834740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58811d318e6ada248924215166d581e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthUI
+  playerHealth: {fileID: 0}
+  healthText: {fileID: 0}
 --- !u!1 &1244482868
 GameObject:
   m_ObjectHideFlags: 0
