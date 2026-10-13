@@ -6,9 +6,9 @@ public class Weapon : MonoBehaviour
 {
     [Header("Identity")]
     [SerializeField] private string weaponName = "Weapon";
-
     [SerializeField]
-    private WeaponFamily weaponFamily = WeaponFamily.Rifle;
+    private WeaponFamily weaponFamily =
+        WeaponFamily.Rifle;
 
     [Header("Supported Attachment Slots")]
     [SerializeField]
@@ -23,14 +23,10 @@ public class Weapon : MonoBehaviour
     [SerializeField, Range(0f, 30f)]
     private float baseSpreadAngle = 3f;
 
-    private float spreadMultiplier = 1f;
-
-    public float SpreadAngle =>
-        Mathf.Max(0f, baseSpreadAngle * spreadMultiplier);
-
     [Header("Rarity")]
     [SerializeField]
-    private LootRarity rarity = LootRarity.Common;
+    private LootRarity rarity =
+        LootRarity.Common;
 
     [Header("Ammo")]
     [SerializeField] private int baseMagazineSize = 30;
@@ -40,6 +36,26 @@ public class Weapon : MonoBehaviour
     [Header("Projectile")]
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
+
+    [Header("Heat Sink Settings")]
+    [SerializeField] private float maxHeat = 100f;
+    [SerializeField] private float heatPerShot = 8f;
+    [SerializeField] private float coolingPerSecond = 20f;
+
+    [SerializeField]
+    private float baseHeatFireRateBonus = 0.30f;
+
+    [SerializeField]
+    private float fireRateBonusPerExtraStack = 0.10f;
+
+    [SerializeField]
+    private float baseHeatSpreadPenalty = 0.50f;
+
+    [SerializeField]
+    private float spreadPenaltyPerExtraStack = 0.15f;
+
+    private float currentHeat;
+    private float lastHeatUpdateTime;
 
     private int currentAmmo;
     private float nextFireTime;
@@ -51,6 +67,7 @@ public class Weapon : MonoBehaviour
     private float fireRateMultiplier = 1f;
     private float projectileSpeedMultiplier = 1f;
     private float reloadTimeMultiplier = 1f;
+    private float spreadMultiplier = 1f;
 
     private float magazineSizeMultiplier = 1f;
     private int magazineFlatBonus;
@@ -67,6 +84,25 @@ public class Weapon : MonoBehaviour
     public int ReserveAmmo => reserveAmmo;
     public LootRarity Rarity => rarity;
     public bool IsReloading => isReloading;
+
+    public float CurrentHeat
+    {
+        get
+        {
+            UpdateHeat();
+            return currentHeat;
+        }
+    }
+
+    public float HeatPercent =>
+        maxHeat > 0f
+            ? CurrentHeat / maxHeat
+            : 0f;
+
+    private int HeatSinkStacks =>
+        itemInventory != null
+            ? itemInventory.GetStackCount(ItemID.HeatSink)
+            : 0;
 
     public float Damage
     {
@@ -86,8 +122,49 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public float FireRate =>
-        baseFireRate * fireRateMultiplier;
+    public float FireRate
+    {
+        get
+        {
+            float rate = baseFireRate * fireRateMultiplier;
+
+            int stacks = HeatSinkStacks;
+
+            if (stacks > 0)
+            {
+                float bonusAtMaxHeat =
+                    baseHeatFireRateBonus +
+                    (stacks - 1) *
+                    fireRateBonusPerExtraStack;
+
+                rate *= 1f + HeatPercent * bonusAtMaxHeat;
+            }
+
+            return rate;
+        }
+    }
+
+    public float SpreadAngle
+    {
+        get
+        {
+            float angle = baseSpreadAngle * spreadMultiplier;
+
+            int stacks = HeatSinkStacks;
+
+            if (stacks > 0)
+            {
+                float penaltyAtMaxHeat =
+                    baseHeatSpreadPenalty +
+                    (stacks - 1) *
+                    spreadPenaltyPerExtraStack;
+
+                angle *= 1f + HeatPercent * penaltyAtMaxHeat;
+            }
+
+            return Mathf.Max(0f, angle);
+        }
+    }
 
     public float ProjectileSpeed =>
         baseProjectileSpeed * projectileSpeedMultiplier;
@@ -114,11 +191,13 @@ public class Weapon : MonoBehaviour
         RecalculateAttachmentStats();
 
         currentAmmo = MagazineSize;
+        lastHeatUpdateTime = Time.time;
     }
 
     private void Update()
     {
         CheckReload();
+        UpdateHeat();
     }
 
     private void OnEnable()
@@ -130,6 +209,40 @@ public class Weapon : MonoBehaviour
             itemInventory =
                 GetComponentInParent<PlayerItemInventory>();
         }
+    }
+
+    private void UpdateHeat()
+    {
+        float now = Time.time;
+
+        float elapsed =
+            Mathf.Max(0f, now - lastHeatUpdateTime);
+
+        lastHeatUpdateTime = now;
+
+        if (HeatSinkStacks <= 0)
+        {
+            currentHeat = 0f;
+            return;
+        }
+
+        currentHeat = Mathf.Max(
+            0f,
+            currentHeat - coolingPerSecond * elapsed
+        );
+    }
+
+    private void AddHeat()
+    {
+        if (HeatSinkStacks <= 0)
+            return;
+
+        UpdateHeat();
+
+        currentHeat = Mathf.Min(
+            maxHeat,
+            currentHeat + heatPerShot
+        );
     }
 
     public void Fire(Vector2 direction)
@@ -148,33 +261,37 @@ public class Weapon : MonoBehaviour
             return;
         }
 
-        if (FireRate <= 0f)
-            return;
+        float effectiveFireRate = FireRate;
 
-        float timeBetweenShots = 1f / FireRate;
+        if (effectiveFireRate <= 0f)
+            return;
 
         if (Time.time < nextFireTime)
             return;
 
-        nextFireTime = Time.time + timeBetweenShots;
+        nextFireTime =
+            Time.time + 1f / effectiveFireRate;
 
-        // Only the original shot consumes ammo.
         currentAmmo--;
 
-        // Fire the normal projectile.
+        // Build heat for one successful trigger shot.
+        AddHeat();
+
+        // Normal shot.
         SpawnProjectile(direction);
 
-        // Check for Rusty Screw activation.
+        // Rusty Screw bonus shot, if activated.
         TryActivateRustyScrew(direction);
     }
 
     private void SpawnProjectile(Vector2 direction)
     {
         float randomAngle =
-    Random.Range(-SpreadAngle, SpreadAngle);
+            Random.Range(-SpreadAngle, SpreadAngle);
 
         Vector2 spreadDirection =
-            Quaternion.Euler(0f, 0f, randomAngle) * direction.normalized;
+            Quaternion.Euler(0f, 0f, randomAngle) *
+            direction.normalized;
 
         Vector3 spawnPosition =
             firePoint != null
@@ -216,12 +333,12 @@ public class Weapon : MonoBehaviour
             return;
 
         float activationChance =
-            Mathf.Clamp01(stacks * .10f);
+            Mathf.Clamp01(stacks * 0.10f);
 
         if (Random.value >= activationChance)
             return;
 
-        // Bonus shot does not consume ammo or trigger itself.
+        // No extra ammo or heat for the bonus projectile.
         SpawnProjectile(direction);
 
         Debug.Log(
@@ -295,7 +412,6 @@ public class Weapon : MonoBehaviour
         equippedAttachments[attachment.slotType] = attachment;
 
         RecalculateAttachmentStats();
-        spreadMultiplier = 1f;
 
         int magazineDifference =
             MagazineSize - oldMagazineSize;
@@ -344,6 +460,7 @@ public class Weapon : MonoBehaviour
         fireRateMultiplier = 1f;
         projectileSpeedMultiplier = 1f;
         reloadTimeMultiplier = 1f;
+        spreadMultiplier = 1f;
 
         magazineSizeMultiplier = 1f;
         magazineFlatBonus = 0;

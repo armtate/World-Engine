@@ -41,16 +41,36 @@ PrefabInstance:
       value: Rifle
       objectReference: {fileID: 0}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: heatPerShot
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: baseSpreadAngle
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: coolingPerSecond
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: projectilePrefab
       value: 
       objectReference: {fileID: 4585283912060457933, guid: 1f4f15a76e34c174f9eec9d082325f0a, type: 3}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: baseHeatFireRateBonus
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: baseHeatSpreadPenalty
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: supportedSlots.Array.size
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
+      propertyPath: fireRateBonusPerExtraStack
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6016483786196959239, guid: 4613bb8708234d64596dde9d8ef3a6b8, type: 3}
       propertyPath: 'supportedSlots.Array.data[1]'

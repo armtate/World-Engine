@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b3e172523eed9245bc2d743a0efa385, type: 3}
   m_Name: RustySkrew
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 0
-  itemName: Item
+  itemID: 2
+  itemName: Rusty Screw
   rarity: 0
-  description: Item description.
+  description: Each stack grants a 10% chance to fire an additional shot without
+    consuming ammo.
