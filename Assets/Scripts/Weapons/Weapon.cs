@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,8 +8,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private string weaponName = "Weapon";
 
     [SerializeField]
-    private WeaponFamily weaponFamily =
-        WeaponFamily.Rifle;
+    private WeaponFamily weaponFamily = WeaponFamily.Rifle;
 
     [Header("Supported Attachment Slots")]
     [SerializeField]
@@ -19,10 +19,18 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float baseFireRate = 8f;
     [SerializeField] private float baseProjectileSpeed = 15f;
 
+    [Header("Accuracy")]
+    [SerializeField, Range(0f, 30f)]
+    private float baseSpreadAngle = 3f;
+
+    private float spreadMultiplier = 1f;
+
+    public float SpreadAngle =>
+        Mathf.Max(0f, baseSpreadAngle * spreadMultiplier);
+
     [Header("Rarity")]
     [SerializeField]
-    private LootRarity rarity =
-        LootRarity.Common;
+    private LootRarity rarity = LootRarity.Common;
 
     [Header("Ammo")]
     [SerializeField] private int baseMagazineSize = 30;
@@ -49,31 +57,16 @@ public class Weapon : MonoBehaviour
 
     private PlayerItemInventory itemInventory;
 
-    private readonly Dictionary<
-        AttachmentSlotType,
-        WeaponAttachment
-    > equippedAttachments =
-        new Dictionary<
-            AttachmentSlotType,
-            WeaponAttachment
-        >();
+    private readonly Dictionary<AttachmentSlotType, WeaponAttachment>
+        equippedAttachments =
+        new Dictionary<AttachmentSlotType, WeaponAttachment>();
 
     public string WeaponName => weaponName;
-
-    public WeaponFamily WeaponFamily =>
-        weaponFamily;
-
-    public int CurrentAmmo =>
-        currentAmmo;
-
-    public int ReserveAmmo =>
-        reserveAmmo;
-
-    public LootRarity Rarity =>
-        rarity;
-
-    public bool IsReloading =>
-        isReloading;
+    public WeaponFamily WeaponFamily => weaponFamily;
+    public int CurrentAmmo => currentAmmo;
+    public int ReserveAmmo => reserveAmmo;
+    public LootRarity Rarity => rarity;
+    public bool IsReloading => isReloading;
 
     public float Damage
     {
@@ -84,8 +77,7 @@ public class Weapon : MonoBehaviour
             if (itemInventory != null)
             {
                 itemDamageMultiplier =
-                    itemInventory
-                        .GetWeaponDamageMultiplier();
+                    itemInventory.GetWeaponDamageMultiplier();
             }
 
             return baseDamage *
@@ -98,33 +90,26 @@ public class Weapon : MonoBehaviour
         baseFireRate * fireRateMultiplier;
 
     public float ProjectileSpeed =>
-        baseProjectileSpeed *
-        projectileSpeedMultiplier;
+        baseProjectileSpeed * projectileSpeedMultiplier;
 
     public float ReloadTime =>
-        baseReloadTime *
-        reloadTimeMultiplier;
+        baseReloadTime * reloadTimeMultiplier;
 
     public int MagazineSize =>
         Mathf.Max(
             1,
             Mathf.RoundToInt(
-                baseMagazineSize *
-                magazineSizeMultiplier
+                baseMagazineSize * magazineSizeMultiplier
             ) + magazineFlatBonus
         );
 
     private void Awake()
     {
         if (firePoint == null)
-        {
-            firePoint =
-                transform.Find("FirePoint");
-        }
+            firePoint = transform.Find("FirePoint");
 
         itemInventory =
-            GetComponentInParent<
-                PlayerItemInventory>();
+            GetComponentInParent<PlayerItemInventory>();
 
         RecalculateAttachmentStats();
 
@@ -143,8 +128,7 @@ public class Weapon : MonoBehaviour
         if (itemInventory == null)
         {
             itemInventory =
-                GetComponentInParent<
-                    PlayerItemInventory>();
+                GetComponentInParent<PlayerItemInventory>();
         }
     }
 
@@ -164,48 +148,85 @@ public class Weapon : MonoBehaviour
             return;
         }
 
-        float timeBetweenShots =
-            1f / FireRate;
+        if (FireRate <= 0f)
+            return;
+
+        float timeBetweenShots = 1f / FireRate;
 
         if (Time.time < nextFireTime)
             return;
 
-        nextFireTime =
-            Time.time + timeBetweenShots;
+        nextFireTime = Time.time + timeBetweenShots;
 
+        // Only the original shot consumes ammo.
         currentAmmo--;
+
+        // Fire the normal projectile.
+        SpawnProjectile(direction);
+
+        // Check for Rusty Screw activation.
+        TryActivateRustyScrew(direction);
+    }
+
+    private void SpawnProjectile(Vector2 direction)
+    {
+        float randomAngle =
+    Random.Range(-SpreadAngle, SpreadAngle);
+
+        Vector2 spreadDirection =
+            Quaternion.Euler(0f, 0f, randomAngle) * direction.normalized;
 
         Vector3 spawnPosition =
             firePoint != null
                 ? firePoint.position
                 : transform.position;
 
-        GameObject projectile =
-            Instantiate(
-                projectilePrefab,
-                spawnPosition,
-                Quaternion.identity
-            );
+        GameObject projectile = Instantiate(
+            projectilePrefab,
+            spawnPosition,
+            Quaternion.identity
+        );
 
         WeaponProjectile projectileScript =
-            projectile.GetComponent<
-                WeaponProjectile>();
+            projectile.GetComponent<WeaponProjectile>();
 
         if (projectileScript != null)
         {
-            Debug.Log(
-                weaponName +
-                " fired for " +
-                Damage +
-                " damage."
-                );
-
             projectileScript.Initialize(
-                direction,
+                spreadDirection,
                 Damage,
                 ProjectileSpeed
             );
         }
+
+        Debug.Log(
+            weaponName + " fired for " + Damage + " damage."
+        );
+    }
+
+    private void TryActivateRustyScrew(Vector2 direction)
+    {
+        if (itemInventory == null)
+            return;
+
+        int stacks =
+            itemInventory.GetStackCount(ItemID.RustyScrew);
+
+        if (stacks <= 0)
+            return;
+
+        float activationChance =
+            Mathf.Clamp01(stacks * .10f);
+
+        if (Random.value >= activationChance)
+            return;
+
+        // Bonus shot does not consume ammo or trigger itself.
+        SpawnProjectile(direction);
+
+        Debug.Log(
+            "Rusty Screw activated! | Stacks: " + stacks
+        );
     }
 
     public void StartReload()
@@ -221,8 +242,7 @@ public class Weapon : MonoBehaviour
 
         isReloading = true;
 
-        reloadEndTime =
-            Time.time + ReloadTime;
+        reloadEndTime = Time.time + ReloadTime;
     }
 
     private void CheckReload()
@@ -238,14 +258,12 @@ public class Weapon : MonoBehaviour
 
     private void FinishReload()
     {
-        int ammoNeeded =
-            MagazineSize - currentAmmo;
+        int ammoNeeded = MagazineSize - currentAmmo;
 
-        int ammoToLoad =
-            Mathf.Min(
-                ammoNeeded,
-                reserveAmmo
-            );
+        int ammoToLoad = Mathf.Min(
+            ammoNeeded,
+            reserveAmmo
+        );
 
         currentAmmo += ammoToLoad;
         reserveAmmo -= ammoToLoad;
@@ -253,79 +271,57 @@ public class Weapon : MonoBehaviour
         isReloading = false;
     }
 
-    public bool CanUseAttachment(
-        WeaponAttachment attachment)
+    public bool CanUseAttachment(WeaponAttachment attachment)
     {
         if (attachment == null)
             return false;
 
-        if (!SupportsSlot(
-            attachment.slotType))
-        {
+        if (!SupportsSlot(attachment.slotType))
             return false;
-        }
 
-        if (!attachment.IsCompatibleWith(
-            weaponFamily))
-        {
+        if (!attachment.IsCompatibleWith(weaponFamily))
             return false;
-        }
 
         return true;
     }
 
-    public bool ApplyAttachment(
-        WeaponAttachment attachment)
+    public bool ApplyAttachment(WeaponAttachment attachment)
     {
-        if (!CanUseAttachment(
-            attachment))
-        {
+        if (!CanUseAttachment(attachment))
             return false;
-        }
 
-        int oldMagazineSize =
-            MagazineSize;
+        int oldMagazineSize = MagazineSize;
 
-        equippedAttachments[
-            attachment.slotType
-        ] = attachment;
+        equippedAttachments[attachment.slotType] = attachment;
 
         RecalculateAttachmentStats();
+        spreadMultiplier = 1f;
 
         int magazineDifference =
-            MagazineSize -
-            oldMagazineSize;
+            MagazineSize - oldMagazineSize;
 
         if (magazineDifference > 0)
         {
-            currentAmmo +=
-                magazineDifference;
+            currentAmmo += magazineDifference;
         }
-        else if (
-            currentAmmo >
-            MagazineSize)
+        else if (currentAmmo > MagazineSize)
         {
-            currentAmmo =
-                MagazineSize;
+            currentAmmo = MagazineSize;
         }
 
         return true;
     }
 
-    public bool SupportsSlot(
-        AttachmentSlotType slot)
+    public bool SupportsSlot(AttachmentSlotType slot)
     {
         if (supportedSlots == null)
             return false;
 
-        foreach (
-            AttachmentSlotType supportedSlot
-            in supportedSlots)
+        foreach (AttachmentSlotType supportedSlot
+                 in supportedSlots)
         {
             if (supportedSlot == slot)
-            {
                 return true;
-            }
         }
 
         return false;
@@ -352,32 +348,22 @@ public class Weapon : MonoBehaviour
         magazineSizeMultiplier = 1f;
         magazineFlatBonus = 0;
 
-        foreach (
-            WeaponAttachment attachment
-            in equippedAttachments.Values)
+        foreach (WeaponAttachment attachment
+                 in equippedAttachments.Values)
         {
             if (attachment == null)
                 continue;
 
-            damageMultiplier *=
-                attachment.damageMultiplier;
-
-            fireRateMultiplier *=
-                attachment.fireRateMultiplier;
-
+            damageMultiplier *= attachment.damageMultiplier;
+            fireRateMultiplier *= attachment.fireRateMultiplier;
             projectileSpeedMultiplier *=
-                attachment
-                    .projectileSpeedMultiplier;
-
+                attachment.projectileSpeedMultiplier;
             reloadTimeMultiplier *=
                 attachment.reloadTimeMultiplier;
-
             magazineSizeMultiplier *=
-                attachment
-                    .magazineSizeMultiplier;
+                attachment.magazineSizeMultiplier;
 
-            magazineFlatBonus +=
-                attachment.magazineFlatBonus;
+            magazineFlatBonus += attachment.magazineFlatBonus;
         }
     }
 }
