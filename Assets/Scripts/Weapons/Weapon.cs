@@ -63,6 +63,11 @@ public class Weapon : MonoBehaviour
     private bool isReloading;
     private float reloadEndTime;
 
+    // Empty magazine sound settings
+    [Header("Empty Magazine Audio")]
+    [SerializeField] private float emptySoundCooldown = 0.3f;
+    private float nextEmptySoundTime;
+
     private float damageMultiplier = 1f;
     private float fireRateMultiplier = 1f;
     private float projectileSpeedMultiplier = 1f;
@@ -73,6 +78,7 @@ public class Weapon : MonoBehaviour
     private int magazineFlatBonus;
 
     private PlayerItemInventory itemInventory;
+    private WeaponAudio weaponAudio;
 
     private readonly Dictionary<AttachmentSlotType, WeaponAttachment>
         equippedAttachments =
@@ -182,6 +188,8 @@ public class Weapon : MonoBehaviour
 
     private void Awake()
     {
+        weaponAudio = GetComponent<WeaponAudio>();
+
         if (firePoint == null)
             firePoint = transform.Find("FirePoint");
 
@@ -257,6 +265,14 @@ public class Weapon : MonoBehaviour
 
         if (currentAmmo <= 0)
         {
+            if (Time.time >= nextEmptySoundTime)
+            {
+                if (weaponAudio != null)
+                    weaponAudio.PlayEmpty();
+
+                nextEmptySoundTime = Time.time + emptySoundCooldown;
+            }
+
             StartReload();
             return;
         }
@@ -273,6 +289,10 @@ public class Weapon : MonoBehaviour
             Time.time + 1f / effectiveFireRate;
 
         currentAmmo--;
+
+        // Play gunshot once per actual shot.
+        if (weaponAudio != null)
+            weaponAudio.PlayGunshot();
 
         // Build heat for one successful trigger shot.
         AddHeat();
@@ -358,6 +378,8 @@ public class Weapon : MonoBehaviour
             return;
 
         isReloading = true;
+        if (weaponAudio != null)
+            weaponAudio.PlayReload();
 
         reloadEndTime = Time.time + ReloadTime;
     }

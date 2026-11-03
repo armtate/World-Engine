@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class WeaponAttachmentPickup :
@@ -42,15 +43,13 @@ public class WeaponAttachmentPickup :
             if (visual != null)
             {
                 highlightRenderer =
-                    visual.GetComponent<
-                        SpriteRenderer>();
+                    visual.GetComponent<SpriteRenderer>();
             }
 
             if (highlightRenderer == null)
             {
                 highlightRenderer =
-                    GetComponent<
-                        SpriteRenderer>();
+                    GetComponent<SpriteRenderer>();
             }
         }
 
@@ -67,6 +66,9 @@ public class WeaponAttachmentPickup :
         if (attachment == null)
             return;
 
+        if (player == null)
+            return;
+
         Weapon weapon =
             player.CurrentWeapon;
 
@@ -74,9 +76,7 @@ public class WeaponAttachmentPickup :
             return;
 
         bool attachmentApplied =
-            weapon.ApplyAttachment(
-                attachment
-            );
+            weapon.ApplyAttachment(attachment);
 
         if (!attachmentApplied)
         {
@@ -89,6 +89,16 @@ public class WeaponAttachmentPickup :
             return;
         }
 
+        // Play sound only after successful attachment.
+        PickupAudio pickupAudio =
+            player.GetComponent<PickupAudio>();
+
+        if (pickupAudio != null)
+        {
+            pickupAudio.PlayAttachmentPickup();
+        }
+
+        // Remove the attachment pickup.
         Destroy(gameObject);
     }
 

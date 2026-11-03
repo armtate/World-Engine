@@ -1,17 +1,18 @@
+
 using UnityEngine;
 
 public class WeaponPickup : MonoBehaviour, IInteractable
 {
     [SerializeField] private Weapon weaponPrefab;
-
-    public Weapon WeaponPrefab => weaponPrefab;
-
     [SerializeField] private SpriteRenderer highlightRenderer;
 
     [Header("Highlight")]
-    [SerializeField] private Color highlightedColor = Color.yellow;
+    [SerializeField]
+    private Color highlightedColor = Color.yellow;
 
     private Color originalColor;
+
+    public Weapon WeaponPrefab => weaponPrefab;
 
     public string InteractionText
     {
@@ -45,19 +46,31 @@ public class WeaponPickup : MonoBehaviour, IInteractable
 
         if (highlightRenderer != null)
         {
-            originalColor =
-                highlightRenderer.color;
+            originalColor = highlightRenderer.color;
         }
     }
 
-    public void Interact(
-        PlayerWeaponController player)
+    public void Interact(PlayerWeaponController player)
     {
         if (weaponPrefab == null)
             return;
 
+        if (player == null)
+            return;
+
+        // Give the player the weapon.
         player.PickUpWeapon(weaponPrefab);
 
+        // Play the weapon pickup sound.
+        PickupAudio pickupAudio =
+            player.GetComponent<PickupAudio>();
+
+        if (pickupAudio != null)
+        {
+            pickupAudio.PlayWeaponPickup();
+        }
+
+        // Remove the pickup from the world.
         Destroy(gameObject);
     }
 
@@ -65,8 +78,7 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color =
-                highlightedColor;
+            highlightRenderer.color = highlightedColor;
         }
     }
 
@@ -74,8 +86,7 @@ public class WeaponPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color =
-                originalColor;
+            highlightRenderer.color = originalColor;
         }
     }
 }

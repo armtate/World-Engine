@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class ItemPickup : MonoBehaviour, IInteractable
@@ -7,8 +8,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
 
     [Header("Highlight")]
     [SerializeField]
-    private Color highlightedColor =
-        Color.yellow;
+    private Color highlightedColor = Color.yellow;
 
     private Color originalColor;
 
@@ -21,8 +21,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
             if (itemData == null)
                 return "Pick Up Item";
 
-            return "Pick Up " +
-                itemData.itemName;
+            return "Pick Up " + itemData.itemName;
         }
     }
 
@@ -30,8 +29,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer == null)
         {
-            Transform visual =
-                transform.Find("Visual");
+            Transform visual = transform.Find("Visual");
 
             if (visual != null)
             {
@@ -48,13 +46,11 @@ public class ItemPickup : MonoBehaviour, IInteractable
 
         if (highlightRenderer != null)
         {
-            originalColor =
-                highlightRenderer.color;
+            originalColor = highlightRenderer.color;
         }
     }
 
-    public void Interact(
-        PlayerWeaponController player)
+    public void Interact(PlayerWeaponController player)
     {
         if (itemData == null)
             return;
@@ -75,8 +71,19 @@ public class ItemPickup : MonoBehaviour, IInteractable
             return;
         }
 
+        // Add the item to the player's inventory.
         inventory.AddItem(itemData);
 
+        // Play the item pickup sound.
+        PickupAudio pickupAudio =
+            player.GetComponent<PickupAudio>();
+
+        if (pickupAudio != null)
+        {
+            pickupAudio.PlayItemPickup();
+        }
+
+        // Remove the pickup from the world.
         Destroy(gameObject);
     }
 
@@ -84,8 +91,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color =
-                highlightedColor;
+            highlightRenderer.color = highlightedColor;
         }
     }
 
@@ -93,8 +99,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
     {
         if (highlightRenderer != null)
         {
-            highlightRenderer.color =
-                originalColor;
+            highlightRenderer.color = originalColor;
         }
     }
 }

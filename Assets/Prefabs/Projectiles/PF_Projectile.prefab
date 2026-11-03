@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6008912917751242692}
   - component: {fileID: 5063373456143783414}
   - component: {fileID: 1597437083461664302}
+  - component: {fileID: -32255498918402444}
   m_Layer: 0
   m_Name: PF_Projectile
   m_TagString: Untagged
@@ -81,7 +82,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 2142187627
-  m_SortingLayer: 3
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
@@ -102,7 +103,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4585283912060457933}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -179,3 +180,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee018f0eb2c12c04182f36498bf6c5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponProjectile
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 9
+--- !u!114 &-32255498918402444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4585283912060457933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf97817e2a9fda45b25730367df6ef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProjectileAudio
+  enemyHitSound: {fileID: 8300000, guid: 687ac998818e8f948a6424e1dbba12bd, type: 3}
+  wallHitSound: {fileID: 8300000, guid: 43ef57ca9ce355d4ea859ebe7153b088, type: 3}
+  enemyHitVolume: 0.5
+  wallHitVolume: 0.238
+  minPitch: 0.97
+  maxPitch: 1.03
