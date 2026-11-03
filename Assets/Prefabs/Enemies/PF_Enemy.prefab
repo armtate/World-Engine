@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7696758570957850910}
   - component: {fileID: -6241188839797184109}
   - component: {fileID: -558091897796862832}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PF_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -210,9 +210,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5663d065741314da561f76d7cc98ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
-  patrolDistance: 3
+  detectionRadius: 20
+  stoppingDistance: 1
+  patrolDuration: 2
   patrolWaitTime: 1.5
-  detectionRadius: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  wallCheckDistance: 0.7
+  wallCheckOffset: {x: 0, y: 0.3}
 --- !u!114 &-558091897796862832
 MonoBehaviour:
   m_ObjectHideFlags: 0

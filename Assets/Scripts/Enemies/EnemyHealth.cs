@@ -1,7 +1,11 @@
+
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    // Tracks all active enemies
+    public static int ActiveEnemyCount { get; private set; }
+
     [SerializeField] private int maxHealth = 5;
 
     [Header("Damage Number")]
@@ -16,10 +20,19 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    private void OnEnable()
+    {
+        ActiveEnemyCount++;
+    }
+
+    private void OnDisable()
+    {
+        ActiveEnemyCount--;
+    }
+
     public void TakeDamage(float damage)
     {
-        int actualDamage =
-            Mathf.RoundToInt(damage);
+        int actualDamage = Mathf.RoundToInt(damage);
 
         currentHealth -= actualDamage;
 
@@ -37,8 +50,7 @@ public class EnemyHealth : MonoBehaviour
             return;
 
         Vector3 spawnPosition =
-            transform.position +
-            damageNumberOffset;
+            transform.position + damageNumberOffset;
 
         DamageNumberSpawner.Instance.Spawn(
             damage,

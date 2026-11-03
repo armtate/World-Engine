@@ -23,7 +23,7 @@ public class PlayerHealthUI : MonoBehaviour
         if (playerHealth == null)
         {
             playerHealth =
-                FindFirstObjectByType<PlayerHealth>();
+                FindAnyObjectByType<PlayerHealth>();
         }
 
         UpdateHealthText();

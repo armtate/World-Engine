@@ -1,24 +1,35 @@
+
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyMovement : MonoBehaviour
 {
-    [SerializeField]
-    private float moveSpeed = 3f;
+    [Header("Movement Settings")]
+    [SerializeField] private float moveSpeed = 3f;
 
     private Rigidbody2D rb;
+    private float moveDirection;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
+    private void FixedUpdate()
+    {
+        rb.linearVelocity = new Vector2(
+            moveDirection * moveSpeed,
+            rb.linearVelocity.y
+        );
+    }
+
     public void Move(float direction)
     {
-        rb.linearVelocity = new Vector2(direction * moveSpeed, rb.linearVelocity.y);
+        moveDirection = Mathf.Clamp(direction, -1f, 1f);
     }
 
     public void Stop()
     {
-        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+        moveDirection = 0f;
     }
 }
