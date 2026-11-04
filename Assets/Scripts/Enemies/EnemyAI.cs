@@ -151,6 +151,8 @@ public class EnemyAI : MonoBehaviour
         ).collider != null;
     }
 
+
+
     private void Patrol()
     {
         float direction = movingRight ? 1f : -1f;
@@ -164,6 +166,8 @@ public class EnemyAI : MonoBehaviour
 
         movement.Move(direction);
     }
+
+
 
     private void Chase()
     {
