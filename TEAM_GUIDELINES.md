@@ -1,3 +1,4 @@
+(Below is AI Generated)
 # SummerGame Team Guidelines
 
 ## Team Members
